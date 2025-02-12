@@ -5,15 +5,28 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { FormData } from "@/tpes/auth";
 import Link from "next/link";
 import Image from "next/image";
+import axios from "@/utils/axios";
 
 function SignupForm() {
+
+
   const {
     register,
     handleSubmit,
     getValues,
     formState: { errors },
   } = useForm<FormData>();
-  const onSubmit: SubmitHandler<FormData> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
+    try {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const {confirmPassword , ...rest} = data
+     const response = await axios.post('signup',rest);
+     console.log(response);
+      
+    } catch (error) {
+      console.log(error)
+    }
+  };
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const togglePassword = () => {
@@ -57,7 +70,7 @@ function SignupForm() {
               <label htmlFor="firstName">Firstname</label>
               <input
                 defaultValue=""
-                {...register("firstName", {
+                {...register("firstname", {
                   required: "This field cannot be empty",
                   minLength: {
                     value: 3,
@@ -71,14 +84,14 @@ function SignupForm() {
               />
               {errors && (
                 <p className="text-sm text-red-500">
-                  {errors.firstName?.message}
+                  {errors.firstname?.message}
                 </p>
               )}
 
               <label htmlFor="lastName">Lastname</label>
               <input
                 defaultValue=""
-                {...register("lastName", {
+                {...register("lastname", {
                   required: "This field cannot be empty",
                   minLength: {
                     value: 2,
@@ -92,7 +105,7 @@ function SignupForm() {
               />
               {errors && (
                 <p className="text-sm text-red-500">
-                  {errors.lastName?.message}
+                  {errors.lastname?.message}
                 </p>
               )}
               <label htmlFor="email">Email</label>

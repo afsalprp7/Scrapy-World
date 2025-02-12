@@ -9,6 +9,7 @@ export class AuthController {
 
     @Post('signup')
     async createUser(@Body() formData : UserDto){
+        console.log(formData)
         const password = await bcrypt.hash(formData.password,12);
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const {password : _password , ...rest} = formData ;

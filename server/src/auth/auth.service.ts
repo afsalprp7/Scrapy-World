@@ -9,7 +9,6 @@ export class AuthService {
     constructor(@InjectModel(User.name) private userModel:Model<User>){}
 
     async createUser(formData : UserDto): Promise<User> {
-
         const createdUser = new this.userModel(formData);
         return  await createdUser.save() ;
     }
