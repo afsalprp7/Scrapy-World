@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config'
 import { AuthModule } from './auth/auth.module';
+import { MailModule } from './mail/mail.module';
 
 
 @Module({
@@ -9,6 +10,7 @@ import { AuthModule } from './auth/auth.module';
     ConfigModule.forRoot({isGlobal : true}),
     MongooseModule.forRoot(process.env.MONGODB_URL as string),
     AuthModule,
+    MailModule,
   ],
   controllers: [],
   providers: [],

@@ -1,15 +1,20 @@
 "use client";
-
 import React, { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { FormData } from "@/tpes/auth";
 import Link from "next/link";
 import Image from "next/image";
 import axios from "@/utils/axios";
+import { useRouter } from "next/navigation";
+import { AxiosError } from "axios";
+import { ClipLoader } from "react-spinners";
+import { motion } from "framer-motion";
+
 
 function SignupForm() {
-
-
+  //loader
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -17,14 +22,21 @@ function SignupForm() {
     formState: { errors },
   } = useForm<FormData>();
   const onSubmit: SubmitHandler<FormData> = async (data) => {
+    setLoading(true);
     try {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const {confirmPassword , ...rest} = data
-     const response = await axios.post('signup',rest);
-     console.log(response);
-      
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { confirmPassword, ...rest } = data;
+      const response = await axios.post("send-otp", rest);
+      localStorage.setItem("userResponse",JSON.stringify(response.data));
+      router.push("/otp");
     } catch (error) {
-      console.log(error)
+      if (error instanceof AxiosError) {
+        alert(error.response?.data?.message || "An error occurred");
+      } else {
+        alert("Something went wrong");
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -34,11 +46,24 @@ function SignupForm() {
   };
 
   return (
-    <div
-      className="parentContainer bg-cover bg-center min-h-screen"
+    <motion.div animate={{ opacity: 1, y: 0 }}
+    initial={{ opacity: 0, y: 50 }}
+    transition={{ duration: 0.5, ease: "easeOut" }}
+
+      className={`parentContainer bg-cover bg-center min-h-screen relative`}
       style={{ backgroundImage: `url("/Images/bg-auth.avif")` }}
     >
-      <div className="hidden md:flex items-center">
+      {loading && (
+        <div className="fixed z-10 left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <div className="text-center">
+            <ClipLoader size={50} color="#00000" />
+            <p className="text-black mt-2">Processing...</p>
+          </div>
+        </div>
+      )}
+      <div
+        className={`hidden md:flex items-center ${loading ? "blur-sm" : ""}`}
+      >
         <Image
           src={"/favicon_io/android-chrome-192x192.png"}
           alt="ScrapyWorld logo"
@@ -47,7 +72,11 @@ function SignupForm() {
         />
         <h1 className="text-xl font-bold text-green-900">SCRAPY WORLD</h1>
       </div>
-      <div className="flex items-center justify-center min-h-screen md:min-h-0">
+      <div
+        className={`flex items-center justify-center min-h-screen md:min-h-0 ${
+          loading ? "blur-sm pointer-events-none" : ""
+        } `}
+      >
         <div className="flex flex-col w-full justify-center md:flex-row md:w-[800px] p-6 md:shadow-lg">
           {/*left section */}
           <div className="flex items-center justify-center md:w-[500px]">
@@ -214,7 +243,7 @@ function SignupForm() {
           {/* right section end */}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
