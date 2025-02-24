@@ -1,8 +1,10 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import * as  bcrypt from 'bcryptjs'
 import {  OtpDataDto, UserDto } from 'src/auth/auth.dto';
 import { MailService } from 'src/mail/mail.service';
+import { Response } from 'express'
+import { loginData } from 'src/types/authTypes';
 
 @Controller()
 export class AuthController {
@@ -32,7 +34,12 @@ export class AuthController {
     }
 
     @Post('create-user')
-       otpAuth(@Body() otpData:OtpDataDto){
-       return this.authService.otpAuth(otpData);
+       otpAuth(@Body() otpData:OtpDataDto,@Res() res:Response){
+       return this.authService.otpAuth(otpData,res);
+    }
+
+    @Post('/login')
+    userLogin(@Body() userData:loginData,@Res() res:Response){
+       return this.authService.userLogin(userData,res);
     }
 }

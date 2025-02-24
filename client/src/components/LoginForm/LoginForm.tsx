@@ -3,12 +3,20 @@ import React, { useState } from "react";
 import login_Icon from "../../../public/favicon_io/android-chrome-192x192.png";
 import Image from "next/image";
 import Link from "next/link";
-import {SubmitHandler, useForm} from 'react-hook-form'
+import { SubmitHandler, useForm } from "react-hook-form";
 import { loginData } from "@/tpes/auth";
-
+import { motion } from "framer-motion";
+import axios from "@/utils/axios";
+import { AxiosError } from "axios";
+import { useRouter } from "next/navigation";
 function LoginForm() {
- 
-  const {register,handleSubmit, formState :{errors}} = useForm<loginData>() ;
+  const router = useRouter();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<loginData>();
+  const [validationError, setError] = useState("");
 
   const validEmail: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const passwordUppercase: RegExp = /^(?=.*?[A-Z])/;
@@ -18,14 +26,26 @@ function LoginForm() {
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
-  const onSubmit:SubmitHandler<loginData> = (data)=> console.log(data)
-
+  const onSubmit: SubmitHandler<loginData> = async (data) => {
+    try {
+      const response = await axios.post("/login", data);
+      console.log(response.data.accessToken);
+      router.push("/");
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        setError(error.response?.data?.message || "Invalid Password");
+      }
+    }
+  };
   const togglePassword = () => {
     setShowPassword((prev) => !prev);
   };
 
   return (
-    <div
+    <motion.div
+      animate={{ opacity: 1, x: 0 }}
+      initial={{ opacity: 0, x: 50 }}
+      transition={{ duration: 0.5, ease: "easeIn" }}
       className="bg-cover bg-center min-h-screen"
       style={{ backgroundImage: `url('/Images/bg-auth.avif')` }}
     >
@@ -59,6 +79,9 @@ function LoginForm() {
 
             {/* Login Form */}
             <form onSubmit={handleSubmit(onSubmit)} action="">
+              {validationError && (
+                <h1 className="text-center text-red-600">{validationError}</h1>
+              )}
               {/* Email Input */}
               <label className="block text-sm md:text-base" htmlFor="email">
                 Email
@@ -67,12 +90,15 @@ function LoginForm() {
                 className="shadow block w-full px-4 py-2 border border-gray-300 rounded-md focus:border-green-500 outline-none text-sm md:text-base"
                 type="email"
                 placeholder="Enter the registered email"
-                {...register("email",{
-                  required : "This field cannot be empty",
-                  validate : (value)=> !validEmail.test(value) ? "Invalid email" : true
+                {...register("email", {
+                  required: "This field cannot be empty",
+                  validate: (value) =>
+                    !validEmail.test(value) ? "Invalid email" : true,
                 })}
               />
-              {errors && <p className="text-sm text-red-500">{errors.email?.message}</p>}
+              {errors && (
+                <p className="text-sm text-red-500">{errors.email?.message}</p>
+              )}
               {/* Password Input */}
               <label
                 className="block mt-1 text-sm md:text-base"
@@ -82,25 +108,25 @@ function LoginForm() {
               </label>
               <div className="relative">
                 <input
-                defaultValue=""
-                className="shadow block w-full px-4 py-2 border border-gray-300 rounded-md outline-none focus:border-green-500 text-sm md:text-base"
+                  defaultValue=""
+                  className="shadow block w-full px-4 py-2 border border-gray-300 rounded-md outline-none focus:border-green-500 text-sm md:text-base"
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter your password"
-                  {...register("password",{
-                    required : "This field cannot be empty",
-                    validate : (value)=>{
-                      if(!passwordUppercase.test(value)){
-                        return "Password need atleast one uppercase"
-                      }else if(!passwordLower.test(value)){
-                        return "Password need atleast one lowercase"
-                      }else if(!passwordDigit.test(value)){
-                        return "Password need atleast one digit"
-                      }else if(!passwordSpecial.test(value)){
-                        return "Password need atleast one special character"
-                      }else{
-                        return true
+                  {...register("password", {
+                    required: "This field cannot be empty",
+                    validate: (value) => {
+                      if (!passwordUppercase.test(value)) {
+                        return "Password need atleast one uppercase";
+                      } else if (!passwordLower.test(value)) {
+                        return "Password need atleast one lowercase";
+                      } else if (!passwordDigit.test(value)) {
+                        return "Password need atleast one digit";
+                      } else if (!passwordSpecial.test(value)) {
+                        return "Password need atleast one special character";
+                      } else {
+                        return true;
                       }
-                    }
+                    },
                   })}
                 />
                 <i
@@ -111,7 +137,9 @@ function LoginForm() {
                 ></i>
               </div>
               {errors && (
-                <p className="text-sm text-red-500">{errors.password?.message}</p>
+                <p className="text-sm text-red-500">
+                  {errors.password?.message}
+                </p>
               )}
               {/* Signup Link */}
               <p className="text-sm mt-1">
@@ -139,7 +167,7 @@ function LoginForm() {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 

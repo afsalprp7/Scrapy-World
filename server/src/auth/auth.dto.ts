@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import { IsEmail, IsNotEmpty } from "class-validator";
-import { ObjectId } from "mongoose";
+import mongoose from "mongoose";
 
 export class UserDto{
 
@@ -20,10 +20,13 @@ export class UserDto{
     password! : string;
 
     @IsNotEmpty()
-    otp! : string | null ;
+    otp? : string | null ;
 
     @IsNotEmpty()
     emailVerified : boolean;
+
+    @IsNotEmpty()
+    _id : string  ;
 }
 
 export class OtpDataDto{
@@ -32,7 +35,7 @@ export class OtpDataDto{
 
     @IsNotEmpty()
     sendingData : {
-        userId : ObjectId,
+        userId : mongoose.Types.ObjectId,
         message : string
     } ;
 }

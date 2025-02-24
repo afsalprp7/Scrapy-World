@@ -11,12 +11,13 @@ function Navbar() {
         router.push('/login');
      }
    return (
-     <nav className="bg-white shadow-md">
+     <nav className="bg-white shadow-md drop-shadow-xl sticky">
        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
          <div className="flex justify-between items-center h-20">
            {/* Logo */}
-           <div className="flex-shrink-0">
+           <div className="flex items-center">
              <Image className="w-[70px]" src={logo_icon} alt="Logo" />
+             <h1 className='text-green-950 font-bold'>SCRAPY WORLD</h1>
            </div>
            {/* Navigation Links */}
            <div className="hidden md:flex space-x-8">

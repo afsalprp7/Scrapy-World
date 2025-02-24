@@ -1,20 +1,27 @@
 "use client";
-import React, { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
+import React, {
+  ChangeEvent,
+  FormEvent,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import Image from "next/image";
 import { otpData } from "@/tpes/auth";
 import axios from "@/utils/axios";
 import { AxiosError } from "axios";
+import { useRouter } from "next/navigation";
 
 function FormOtp() {
+  const router = useRouter();
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
-  const [formError,setFormError] = useState<string>('');
+  const [formError, setFormError] = useState<string>("");
 
-
-  useEffect(()=>{
-    if(inputRefs.current){
-      (inputRefs.current[0] as HTMLInputElement ).focus() ; 
+  useEffect(() => {
+    if (inputRefs.current) {
+      (inputRefs.current[0] as HTMLInputElement).focus();
     }
-  },[])
+  }, []);
 
   const [otp, setOtp] = useState<otpData>({
     digitOne: "",
@@ -23,13 +30,10 @@ function FormOtp() {
     digitFour: "",
   });
 
-
-  
-
   //adding values to the state.
   const handleChange = (e: ChangeEvent<HTMLInputElement>, index: number) => {
     const { name, value } = e.target;
-    const numberReg:RegExp = /^\d*$/
+    const numberReg: RegExp = /^\d*$/;
 
     setOtp({
       ...otp,
@@ -73,31 +77,30 @@ function FormOtp() {
     });
   };
 
-  const SubmitHandler = (event: FormEvent) => {
+  const SubmitHandler = async (event: FormEvent) => {
     event.preventDefault();
-    if(Object.values(otp).some(value => value === '')){
-      setFormError("OTP Incomplete")
-    }else{
-      setFormError('');
-      const submit = async ()=>{
-        try{
+    if (Object.values(otp).some((value) => value === "")) {
+      setFormError("OTP Incomplete");
+    } else {
+      setFormError("");
+      const submit = async () => {
+        try {
           const userOtp = Object.values(otp);
-          const formattedUserOtp = userOtp.join('');
-          const sendingData = JSON.parse(localStorage.getItem("userResponse") || '')
-          console.log(sendingData);
-          await axios.post('create-user',{formattedUserOtp,sendingData});
+          const formattedUserOtp = userOtp.join("");
+          const sendingData = JSON.parse(
+            localStorage.getItem("userResponse") || ""
+          );
+          const response = await axios.post("create-user", { formattedUserOtp, sendingData });
+          console.log("Response:", response);
 
-        }catch(error){
-          if(error instanceof AxiosError){
-          setFormError(error?.response?.data?.message)
-
+          router.push("/");
+        } catch (error) {
+          if (error instanceof AxiosError) {
+            setFormError(error?.response?.data?.message);
           }
         }
-        
-
-      }
-
-      submit()
+      };
+      await submit();
     }
   };
   return (
@@ -141,4 +144,3 @@ function FormOtp() {
 }
 
 export default FormOtp;
-

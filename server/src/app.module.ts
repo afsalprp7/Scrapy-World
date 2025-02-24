@@ -5,12 +5,13 @@ import { AuthModule } from './auth/auth.module';
 import { MailModule } from './mail/mail.module';
 
 
+
 @Module({
   imports: [
     ConfigModule.forRoot({isGlobal : true}),
     MongooseModule.forRoot(process.env.MONGODB_URL as string),
     AuthModule,
-    MailModule,
+    MailModule,    
   ],
   controllers: [],
   providers: [],

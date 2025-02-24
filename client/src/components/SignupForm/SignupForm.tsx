@@ -32,6 +32,7 @@ function SignupForm() {
     } catch (error) {
       if (error instanceof AxiosError) {
         alert(error.response?.data?.message || "An error occurred");
+        router.push("/login");
       } else {
         alert("Something went wrong");
       }
@@ -46,9 +47,9 @@ function SignupForm() {
   };
 
   return (
-    <motion.div animate={{ opacity: 1, y: 0 }}
-    initial={{ opacity: 0, y: 50 }}
-    transition={{ duration: 0.5, ease: "easeOut" }}
+    <motion.div animate={{ opacity: 1, x: 0 }}
+    initial={{ opacity: 0, x: 50 }}
+    transition={{ duration: 0.5, ease: "easeIn" }}
 
       className={`parentContainer bg-cover bg-center min-h-screen relative`}
       style={{ backgroundImage: `url("/Images/bg-auth.avif")` }}
