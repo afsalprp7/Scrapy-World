@@ -1,8 +1,8 @@
 import { Body, Controller, Post, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import * as  bcrypt from 'bcryptjs'
-import {  OtpDataDto, UserDto } from 'src/auth/auth.dto';
-import { MailService } from 'src/mail/mail.service';
+import {  OtpDataDto, UserDto } from 'src/modules/auth/auth.dto';
+import { MailService } from 'src/modules/mail/mail.service';
 import { Response } from 'express'
 import { loginData } from 'src/types/authTypes';
 
@@ -18,7 +18,6 @@ export class AuthController {
     @Post('send-otp')
     async createUser(@Body() formData : UserDto){
         const password = await bcrypt.hash(formData.password,12);
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const {password : _password , ...rest} = formData;
         const  data:UserDto  = {...rest ,password};
         //generating otp

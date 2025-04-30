@@ -7,7 +7,7 @@ import {
 import { InjectModel } from "@nestjs/mongoose";
 import mongoose, { Model } from "mongoose";
 import { User } from "src/entities/user/userSchema";
-import { OtpDataDto, UserDto } from "src/auth/auth.dto";
+import { OtpDataDto, UserDto } from "src/modules/auth/auth.dto";
 import { JwtService } from "@nestjs/jwt";
 import { Response } from "express";
 import { loginData } from "src/types/authTypes";
@@ -60,7 +60,7 @@ export class AuthService {
   //genrate access token
   generateAccessToken(userId: mongoose.Types.ObjectId, email: string) {
     const payload = { userId, email };
-    return this.jwtService.sign(payload);
+    return this.jwtService.sign({payload});
   }
 
   //User Login service
