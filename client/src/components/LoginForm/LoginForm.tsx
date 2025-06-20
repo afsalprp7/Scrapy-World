@@ -11,11 +11,14 @@ import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 function LoginForm() {
   const router = useRouter();
+
+  
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<loginData>();
+
   const [validationError, setError] = useState("");
 
   const validEmail: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

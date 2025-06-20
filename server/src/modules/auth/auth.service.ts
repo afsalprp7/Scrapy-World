@@ -16,7 +16,8 @@ import * as bcrypt from "bcryptjs";
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectModel(User.name) private userModel: Model<User>,
+    @InjectModel(User.name)
+    private userModel: Model<User>,
     private jwtService: JwtService
   ) {}
 
@@ -41,17 +42,27 @@ export class AuthService {
       user.otp = "";
       user.emailVerified = true;
       await user.save();
-      const accessToken: string = this.generateAccessToken(
+      const { accessToken, refreshToken } = this.generateAccessToken(
         sendingData.userId,
         user.email
       );
-      res.cookie("accessToken", accessToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "strict",
-        maxAge: 3600000
+
+      //accessToken for 1 hour
+      res.cookie('accessToken' , accessToken , {
+        httpOnly:true,
+        secure : true ,
+        sameSite : "strict",
+        maxAge : 60 * 60 * 1000
       });
-      return res.status(200).json({ message: "success" });
+
+      //setting refresh token for 7 days
+      res.cookie('refreshToken',refreshToken,{
+        httpOnly:true,
+        secure : true ,
+        sameSite : "strict",
+        maxAge : 7 * 24 * 60 * 60 * 1000
+      });
+      return res.status(200).json({message :"OTP verified successfully" , user})
     } else {
       throw new UnauthorizedException("Invalid OTP");
     }
@@ -60,7 +71,11 @@ export class AuthService {
   //genrate access token
   generateAccessToken(userId: mongoose.Types.ObjectId, email: string) {
     const payload = { userId, email };
-    return this.jwtService.sign({payload});
+    const accessToken = this.jwtService.sign(payload, { expiresIn: "15m" });
+
+    const refreshToken = this.jwtService.sign(payload, { expiresIn: "7d" });
+
+    return { accessToken, refreshToken };
   }
 
   //User Login service

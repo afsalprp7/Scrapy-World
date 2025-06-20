@@ -38,7 +38,7 @@ function HomeContent() {
   return (
     <div>
       <div
-        className="relative banner md:bg-cover bg-center h-[90vh]"
+        className="relative banner bg-center bg-cover  h-[50vh] md:h-[90vh]"
         style={{ backgroundImage: `url(/Images/banner.jpg)` }}
       >
         <div className="fade-div absolute bottom-0 w-full"></div>
