@@ -11,11 +11,14 @@ import { otpData } from "@/tpes/auth";
 import axios from "@/utils/axios";
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
-
+import { useAppDispatch } from "@/redux/typedHooks";
+import { addUser } from "@/redux/user";
 function FormOtp() {
   const router = useRouter();
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const [formError, setFormError] = useState<string>("");
+
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (inputRefs.current) {
@@ -90,9 +93,12 @@ function FormOtp() {
           const sendingData = JSON.parse(
             localStorage.getItem("userResponse") || ""
           );
-          const response = await axios.post("create-user", { formattedUserOtp, sendingData });
-          console.log("Response:", response);
-
+          const response = await axios.post("create-user", {
+            formattedUserOtp,
+            sendingData,
+          });
+          const user = response.data.user;
+          dispatch(addUser(user));
           router.push("/");
         } catch (error) {
           if (error instanceof AxiosError) {

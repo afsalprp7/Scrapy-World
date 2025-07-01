@@ -1,8 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { userDetails } from "@/tpes/home";
 
-const initialState = {
-  user: {},
-};
+
+interface UserState {
+  user: userDetails | null;
+  userLoggedIn: boolean;
+}
+const initialState :UserState = {
+  user : null,
+  userLoggedIn : false
+
+}
 
 export const userSlice = createSlice({
   name: "userSlice",
@@ -10,9 +18,11 @@ export const userSlice = createSlice({
   reducers: {
     addUser: (state, actions) => {
       state.user = { ...actions.payload };
+      state.userLoggedIn = true ;
     },
     removeUser : (state) =>{
-        state.user = {}
+        state.user = null;
+        state.userLoggedIn = false
     }
   },
 });

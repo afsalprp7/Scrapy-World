@@ -7,8 +7,8 @@ import Image from "next/image";
 import axios from "@/utils/axios";
 import { useRouter } from "next/navigation";
 import { AxiosError } from "axios";
-import { ClipLoader } from "react-spinners";
 import { motion } from "framer-motion";
+import  Loader  from "../loader/Loader";
 
 
 function SignupForm() {
@@ -55,11 +55,9 @@ function SignupForm() {
       style={{ backgroundImage: `url("/Images/bg-auth.avif")` }}
     >
       {loading && (
-        <div className="fixed z-10 left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
-          <div className="text-center">
-            <ClipLoader size={50} color="#00000" />
-            <p className="text-black mt-2">Processing...</p>
-          </div>
+        <div>
+          <Loader/>
+          
         </div>
       )}
       <div

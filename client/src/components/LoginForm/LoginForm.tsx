@@ -9,10 +9,12 @@ import { motion } from "framer-motion";
 import axios from "@/utils/axios";
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
+import { addUser } from "@/redux/user";
+import { useAppDispatch } from "@/redux/typedHooks";
 function LoginForm() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
-  
   const {
     register,
     handleSubmit,
@@ -32,7 +34,7 @@ function LoginForm() {
   const onSubmit: SubmitHandler<loginData> = async (data) => {
     try {
       const response = await axios.post("/login", data);
-      console.log(response.data.accessToken);
+      dispatch(addUser(response.data.user));
       router.push("/");
     } catch (error) {
       if (error instanceof AxiosError) {

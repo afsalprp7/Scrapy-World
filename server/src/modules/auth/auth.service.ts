@@ -88,14 +88,20 @@ export class AuthService {
       );
       if (comparePassword) {
         const userId = user._id;
-        const accessToken = this.generateAccessToken(userId, email);
-        res.cookie("accessToken", accessToken, {
-          httpOnly: true,
-          secure: true,
-          sameSite: "strict",
-          maxAge: 3600000
-        });
-        return res.status(200).json({ message: "Login Success" });
+        const {accessToken , refreshToken} = this.generateAccessToken(userId, email);
+        res.cookie('accessToken' , accessToken , {
+        httpOnly:true,
+        secure : true ,
+        sameSite : "strict",
+        maxAge : 60 * 60 * 1000
+      });
+      res.cookie('refreshToken',refreshToken,{
+        httpOnly:true,
+        secure : true ,
+        sameSite : "strict",
+        maxAge : 7 * 24 * 60 * 60 * 1000
+      });
+        return res.status(200).json({ message: "Login Success",user });
       } else {
         throw new UnauthorizedException("Password Incorrect");
       }

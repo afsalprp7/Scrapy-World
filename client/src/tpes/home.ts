@@ -10,5 +10,17 @@ export type homeSectionContent = {
 
 export type navbarSheetContent = {
     heading : string ,
-    content : ()=> JSX.Element
+    content : ()=> JSX.Element,
+    userLoggedIn : boolean
+}
+
+export type userDetails = {
+    id: string
+    firstname : string,
+    lastname : string,
+    password : string,
+    email : string,
+    phone :string,
+    emailVerified : boolean,
+    otp : null | string
 }
