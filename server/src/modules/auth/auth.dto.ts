@@ -27,6 +27,10 @@ export class UserDto{
 
     @IsNotEmpty()
     _id : string  ;
+
+    @IsNotEmpty()
+    userImage : string
+
 }
 
 export class OtpDataDto{

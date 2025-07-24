@@ -22,7 +22,11 @@ export class User{
     emailVerified : boolean
 
     @Prop()
-    otp?: string 
+    otp?: string
+
+    @Prop()
+    userImage : string
+
 }
 
 export const UserSchema = SchemaFactory.createForClass(User) ;

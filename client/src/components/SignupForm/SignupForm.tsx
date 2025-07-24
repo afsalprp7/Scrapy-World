@@ -26,7 +26,7 @@ function SignupForm() {
     try {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { confirmPassword, ...rest } = data;
-      const response = await axios.post("send-otp", rest);
+      const response = await axios.post("/auth/send-otp", rest);
       localStorage.setItem("userResponse",JSON.stringify(response.data));
       router.push("/otp");
     } catch (error) {

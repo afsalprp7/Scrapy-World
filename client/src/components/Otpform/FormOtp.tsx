@@ -93,7 +93,7 @@ function FormOtp() {
           const sendingData = JSON.parse(
             localStorage.getItem("userResponse") || ""
           );
-          const response = await axios.post("create-user", {
+          const response = await axios.post("/auth/create-user", {
             formattedUserOtp,
             sendingData,
           });

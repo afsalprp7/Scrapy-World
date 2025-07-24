@@ -11,14 +11,14 @@ export type homeSectionContent = {
 export type navbarSheetContent = {
     heading : string ,
     content : ()=> JSX.Element,
-    userLoggedIn : boolean
+    userLoggedIn : boolean,
+    dialogBoxFunction : (val:boolean)=> void
 }
 
 export type userDetails = {
-    id: string
+    id: string,
     firstname : string,
     lastname : string,
-    password : string,
     email : string,
     phone :string,
     emailVerified : boolean,

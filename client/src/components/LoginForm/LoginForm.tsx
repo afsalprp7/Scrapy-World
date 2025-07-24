@@ -33,7 +33,7 @@ function LoginForm() {
 
   const onSubmit: SubmitHandler<loginData> = async (data) => {
     try {
-      const response = await axios.post("/login", data);
+      const response = await axios.post("/auth/login", data);
       dispatch(addUser(response.data.user));
       router.push("/");
     } catch (error) {

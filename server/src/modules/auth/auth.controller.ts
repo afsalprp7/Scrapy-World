@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Res } from "@nestjs/common";
+import { Body, Controller, Post, Res, Get } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import * as bcrypt from "bcryptjs";
 import { OtpDataDto, UserDto } from "src/modules/auth/auth.dto";
@@ -6,7 +6,7 @@ import { MailService } from "src/modules/mail/mail.service";
 import { Response } from "express";
 import { loginData } from "src/types/authTypes";
 
-@Controller()
+@Controller("auth")
 export class AuthController {
   constructor(
     private authService: AuthService,
@@ -35,8 +35,15 @@ export class AuthController {
     return this.authService.otpAuth(otpData, res);
   }
 
-  @Post("/login")
+  @Post("login")
   userLogin(@Body() userData: loginData, @Res() res: Response) {
     return this.authService.userLogin(userData, res);
+  }
+
+  @Get("logout")
+  userLogout(@Res() res: Response) {
+    res.clearCookie("accessToken");
+    res.clearCookie("refreshToken");
+    return res.status(200).send({ message: "Logout successfull" });
   }
 }

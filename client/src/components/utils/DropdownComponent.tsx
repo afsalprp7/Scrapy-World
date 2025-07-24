@@ -1,6 +1,8 @@
 import React from "react";
 import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
+import Swal from "sweetalert2";
+import axiosInstance from "axios";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,6 +12,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { userDetails } from "@/tpes/home";
+import { useAppDispatch } from "@/redux/typedHooks";
+import axios from "../../utils/axios";
+import { removeUser } from "@/redux/user";
+import { useRouter } from "next/navigation";
 function DropdownComponent({
   image,
   userLoggedIn,
@@ -19,6 +25,31 @@ function DropdownComponent({
   userLoggedIn: boolean;
   userDetails: userDetails | null;
 }) {
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  const handleLogout = async () => {
+    try {
+      const response = await axios.get("/auth/logout");
+      if (response.status === 200) {
+        dispatch(removeUser());
+        router.push('/')
+      }
+    } catch (error: unknown) {
+      if (axiosInstance.isAxiosError(error)) {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: error?.response?.data?.message || "Something went wrong",
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Server Error",
+        });
+      }
+    }
+  };
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
@@ -42,7 +73,9 @@ function DropdownComponent({
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
-          <Link href='#'>Log Out</Link>
+          <Link href="#" onClick={handleLogout}>
+            Log Out
+          </Link>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

@@ -50,7 +50,7 @@ export class AuthService {
       //accessToken for 1 hour
       res.cookie('accessToken' , accessToken , {
         httpOnly:true,
-        secure : true ,
+        secure : process.env.NODE_ENV === 'production',
         sameSite : "strict",
         maxAge : 60 * 60 * 1000
       });
@@ -58,11 +58,12 @@ export class AuthService {
       //setting refresh token for 7 days
       res.cookie('refreshToken',refreshToken,{
         httpOnly:true,
-        secure : true ,
+        secure : process.env.NODE_ENV === 'production',
         sameSite : "strict",
         maxAge : 7 * 24 * 60 * 60 * 1000
       });
-      return res.status(200).json({message :"OTP verified successfully" , user})
+      const {password , ...responseData} = user
+      return res.status(200).json({message :"OTP verified successfully" , responseData})
     } else {
       throw new UnauthorizedException("Invalid OTP");
     }
@@ -91,13 +92,13 @@ export class AuthService {
         const {accessToken , refreshToken} = this.generateAccessToken(userId, email);
         res.cookie('accessToken' , accessToken , {
         httpOnly:true,
-        secure : true ,
+        secure : process.env.NODE_ENV === 'production' ,
         sameSite : "strict",
         maxAge : 60 * 60 * 1000
       });
       res.cookie('refreshToken',refreshToken,{
         httpOnly:true,
-        secure : true ,
+        secure : process.env.NODE_ENV === 'production' ,
         sameSite : "strict",
         maxAge : 7 * 24 * 60 * 60 * 1000
       });
