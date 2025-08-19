@@ -7,10 +7,12 @@ import { useEffect } from "react";
 export default function LoginPage() {
   const router = useRouter();
   const { userLoggedIn } = useAppSelector((state) => state.user);
+
   useEffect(() => {
     if (userLoggedIn) {
       router.push("/");
     }
-  });
-  return <LoginForm />;
+  }, [userLoggedIn, router]);
+
+  return !userLoggedIn && <LoginForm />;
 }

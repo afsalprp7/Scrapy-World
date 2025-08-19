@@ -5,13 +5,12 @@ import * as cookieParser from 'cookie-parser'
 async function bootstrap(): Promise<void> {
   try {
     const app = await NestFactory.create(AppModule);
-
+    app.use(cookieParser());
     app.enableCors({
       origin : "http://localhost:4000",
       methods : ['GET','HEAD','PUT','PATCH','POST','DELETE'],
       credentials : true,
     });
-    app.use(cookieParser());
     const port = process.env.PORT || 3000; // Provide a default value
     await app.listen(port);
     console.log(`Server is running on port ${port}`);

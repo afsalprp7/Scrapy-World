@@ -16,7 +16,7 @@ export type navbarSheetContent = {
 }
 
 export type userDetails = {
-    id: string,
+    _id: string,
     firstname : string,
     lastname : string,
     email : string,

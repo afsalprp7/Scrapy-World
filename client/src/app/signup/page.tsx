@@ -12,6 +12,6 @@ export default function Signup() {
     if (userLoggedIn) {
       router.push("/");
     }
-  });
-  return <SignupForm />;
+  }, [userLoggedIn, router]);
+  return !userLoggedIn && <SignupForm />;
 }
